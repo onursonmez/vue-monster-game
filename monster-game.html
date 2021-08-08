@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VueJS Monster Games</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="row mt-4">
+                <div class="col-12 text-center">
+                    <h1>{{ gameName }}</h1>
+                </div>
+            </div>            
+            <div class="row mt-2 text-center">
+                <div class="col-6"><strong>{{ yourName }}</strong></div>
+                <div class="col-6"><strong>{{ foreignerName }}</strong></div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="progress" style="height: 40px;">
+                        <div class="progress-bar bg-danger" role="progressbar" v-bind:style="{width: health1 + '%'}" v-bind:aria-valuenow="health1" aria-valuemin="0" v-bind:aria-valuemax="health1">{{ health1 }}%</div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="progress" style="height: 40px;">
+                        <div class="progress-bar bg-danger" role="progressbar" v-bind:style="{width: health2 + '%'}" v-bind:aria-valuenow="health2" aria-valuemin="0" v-bind:aria-valuemax="health2">{{ health2 }}%</div>
+                    </div>                    
+                </div>
+            </div>  
+            <div class="row mt-2">
+                <div class="col-12 text-center">
+                    <small class="text-secondary">Actions</small>
+                </div>            
+            </div>
+            <div class="row mt-2">
+                <div class="col-12">
+                    <div class="btn-group w-100">
+                        <button v-on:click="fight" class="btn btn-success">Fight</button>
+                        <button v-on:click="specialFight" class="btn btn-warning">Special Fight</button>
+                        <button v-on:click="health" class="btn btn-primary">Healt</button>
+                        <button v-on:click="giveup" class="btn btn-secondary">Give up!</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-12 text-center">
+                    <small class="text-secondary">History</small>
+                </div>            
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-12">
+                <div class="card">
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item" v-for="item in histories">{{ item }}</li>
+                    </ul>
+                  </div>         
+                </div>       
+            </div>
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                histories : ["The game reading to start."],
+                gameName: 'Monster Fight Game',
+                yourName: 'I am Monster Killer!', 
+                foreignerName: 'Monster',
+                health1: 100,
+                health2: 100,
+            },
+            methods: {
+                fight: function()
+                {
+                    this.histories.push(this.yourName + ' attacked.');
+                    this.health1 = this.damage(this.health1, 10);
+                    this.health2 = this.damage(this.health2, 10);
+                    this.histories.push(this.yourName + ' health is ' + this.health1);
+                    this.histories.push(this.foreignerName + ' health is ' + this.health2);
+                },
+                specialFight: function()
+                {
+                    this.histories.push('Oh my god! "' + this.yourName + '" used special attack.');
+                    this.health1 = this.damage(this.health1, 10);
+                    this.health2 = this.damage(this.health2, 30);
+                    this.histories.push(this.yourName + ' health is ' + this.health1);
+                    this.histories.push(this.foreignerName + ' health is ' + this.health2);                    
+                }, 
+                health: function()
+                {
+                    this.histories.push(this.yourName + ' increased health.');
+                    this.health1 = this.health(this.health1, 30);
+                    this.histories.push(this.yourName + ' health is ' + this.health1);
+                    this.histories.push(this.foreignerName + ' health is ' + this.health2);                    
+                }, 
+                giveup: function()
+                {
+                    this.histories.push(this.yourName + ' gived up!');
+                    this.health1 = 0;
+                    this.histories.push(this.yourName + ' health is ' + this.health1);
+                    this.histories.push(this.foreignerName + ' health is ' + this.health2);
+                },
+                damage: function(current, power)
+                {
+                    var score = current - Math.ceil(Math.random() * power);
+                    return score <= 0 ? 0 : score;                    
+                },
+                health: function(current, power)
+                {
+                    var health = current + Math.ceil(Math.random() * power);
+                    return health >= 100 ? 100 : health;                   
+                }                                     
+            },
+            watch: {
+                health1: function()
+                {
+                    if(this.health1 == 0)
+                    {
+                        alert('You lost! Winner: ' + this.foreignerName);
+                        this.histories.push('Winner: ' + this.foreignerName);
+                    }
+                },
+                health2: function()
+                {
+                    if(this.health2 == 0)
+                    {
+                        alert('You win! Winner: ' + this.yourName);
+                        this.histories.push('Winner: ' + this.yourName);
+                    }
+                }                
+            }
+        });
+    </script>
+</body>
+</html>
