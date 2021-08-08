@@ -23,12 +23,12 @@
             <div class="row">
                 <div class="col-6">
                     <div class="progress" style="height: 40px;">
-                        <div class="progress-bar bg-danger" role="progressbar" v-bind:style="{width: health1 + '%'}" v-bind:aria-valuenow="health1" aria-valuemin="0" v-bind:aria-valuemax="health1">{{ health1 }}%</div>
+                        <div class="progress-bar bg-danger" role="progressbar" v-bind:style="player_progress" v-bind:aria-valuenow="health1" aria-valuemin="0" v-bind:aria-valuemax="health1">{{ health1 }}%</div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="progress" style="height: 40px;">
-                        <div class="progress-bar bg-danger" role="progressbar" v-bind:style="{width: health2 + '%'}" v-bind:aria-valuenow="health2" aria-valuemin="0" v-bind:aria-valuemax="health2">{{ health2 }}%</div>
+                        <div class="progress-bar bg-danger" role="progressbar" v-bind:style="foreigner_progress" v-bind:aria-valuenow="health2" aria-valuemin="0" v-bind:aria-valuemax="health2">{{ health2 }}%</div>
                     </div>                    
                 </div>
             </div>  
@@ -117,6 +117,20 @@
                     var health = current + Math.ceil(Math.random() * power);
                     return health >= 100 ? 100 : health;                   
                 }                                     
+            },
+            computed: {
+                player_progress: function()
+                {
+                    return {
+                        width: this.health1 + '%'
+                    }
+                },
+                foreigner_progress: function()
+                {
+                    return {
+                        width: this.health2 + '%'
+                    }
+                }                
             },
             watch: {
                 health1: function()
